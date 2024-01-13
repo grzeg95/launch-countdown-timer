@@ -1,0 +1,50 @@
+.app-number {
+
+  display: flex;
+  flex-direction: column;
+
+  .flipper {
+
+    position: absolute;
+    perspective: 400px;
+    z-index: 2;
+    border-bottom: black;
+
+    .face-wrapper {
+
+      position: relative;
+      transform-style: preserve-3d;
+      transform-origin: bottom;
+      transform: rotateX(360deg);
+
+      .face {
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        overflow: hidden;
+
+        &.front {
+          position: absolute;
+        }
+
+        &.back {
+          transform: rotateZ(180deg) rotateY(180deg);
+
+          .down {
+            transform: translateY(-50%);
+          }
+        }
+      }
+    }
+  }
+
+  .app-card {
+    display: block;
+    width: 100%;
+
+    svg {
+      width: 100%;
+      display: block;
+    }
+  }
+}
