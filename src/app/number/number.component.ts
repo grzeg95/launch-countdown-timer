@@ -1,11 +1,8 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {NgTemplateOutlet} from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -16,13 +13,12 @@ import {
   ViewEncapsulation,
   WritableSignal
 } from '@angular/core';
-import {padStart, PadStartPipe} from '../pipes/pad-start.pipe';
+import {map, padStart} from '../utils';
 
 @Component({
   selector: 'app-number',
   standalone: true,
   imports: [
-    PadStartPipe,
     NgTemplateOutlet
   ],
   templateUrl: './number.component.html',
@@ -35,46 +31,48 @@ import {padStart, PadStartPipe} from '../pipes/pad-start.pipe';
   animations: [
     trigger('state', [
 
-      state('ready', style({
-        transform: 'rotateX(360deg)'
-      })),
-
-      state('running', style({
+      state('readyUp', style({
         transform: 'rotateX(180deg)'
       })),
 
-      state('readyBack', style({
-        transform: 'rotateX(180deg)'
-      })),
-
-      state('runningBack', style({
+      state('runningUp', style({
         transform: 'rotateX(360deg)'
       })),
 
-      transition('ready => running', [
+      state('readyDown', style({
+        transform: 'rotateX(360deg)'
+      })),
+
+      state('runningDown', style({
+        transform: 'rotateX(180deg)'
+      })),
+
+      transition('readyUp => runningUp', [
         animate('0.5s cubic-bezier(.42,0,.58,1)')
       ]),
 
-      transition('readyBack => runningBack', [
+      transition('readyDown => runningDown', [
         animate('0.5s cubic-bezier(.42,0,.58,1)')
       ])
     ])
   ]
 })
-export class NumberComponent implements OnInit, AfterViewInit {
+export class NumberComponent implements OnInit {
 
-  @Input() animationTime = 1;
-  @Input({required: true}) min!: number
-  @Input({required: true}) max!: number;
-  @Input({required: true}) value!: number;
-  @Output() maxReached = new EventEmitter<void>();
-  @Output() minReached = new EventEmitter<void>();
-  @Input() cardUp!: TemplateRef<any>;
-  @Input() cardDown!: TemplateRef<any>;
-  @Input() color = 'black';
+  protected readonly padStart = padStart;
+  protected readonly map = map;
+
   @HostBinding('style.font-size.rem') @Input() fontSize = 1;
   @HostBinding('style.font-weight') @Input() fontWeight = 500;
-  protected state = signal<'ready' | 'running' | 'readyBack' | 'runningBack' | 'steady'>('steady');
+  @Input({required: true}) min!: number
+  @Input({required: true}) value!: number;
+  @Input() separatorColor = 'silver';
+  @Output() maxReached = new EventEmitter<void>();
+  @Output() minReached = new EventEmitter<void>();
+  @Input({required: true}) cardUp!: TemplateRef<any>;
+  @Input({required: true}) cardDown!: TemplateRef<any>;
+  @Input() color = 'black';
+  protected state = signal<'readyUp' | 'readyDown' | 'runningUp' | 'runningDown' | 'steady'>('steady');
   protected displayed!: WritableSignal<{
     top: number,
     bottom: number,
@@ -82,13 +80,16 @@ export class NumberComponent implements OnInit, AfterViewInit {
     faceBack: number
   }>
   protected maxLen = 0;
-  protected separatorColor = 'silver';
-  protected readonly padStart = padStart;
 
-  constructor(
-    private el: ElementRef,
-    private cdr: ChangeDetectorRef
-  ) {
+  _max!: number;
+
+  get max() {
+    return this._max;
+  }
+
+  @Input({required: true}) set max(value: number) {
+    this._max = value;
+    this.maxLen = this.max.toString().length;
   }
 
   ngOnInit(): void {
@@ -98,62 +99,26 @@ export class NumberComponent implements OnInit, AfterViewInit {
       faceFront: -1,
       faceBack: -1
     });
-
-    this.maxLen = this.max.toString().length;
   }
 
-  increment() {
-
-    if (this.state() !== 'steady') {
-      return;
-    }
+  increment(direction: 'up' | 'down' = 'down') {
 
     if (this.value + 1 > this.max) {
       this.maxReached.emit();
       return;
     }
 
-    this.state.set('ready');
-
-    this.displayed.set({
-      top: this.value + 1,
-      faceFront: this.value,
-      faceBack: this.value + 1,
-      bottom: this.value
-    });
-
-    setTimeout(() => {
-      this.state.set('running');
-    });
-
-    this.value++;
+    this.setValue(this.value + 1, direction);
   }
 
-  decrement() {
-
-    if (this.state() !== 'steady') {
-      return;
-    }
+  decrement(direction: 'up' | 'down' = 'up') {
 
     if (this.value - 1 < this.min) {
       this.minReached.emit();
       return;
     }
 
-    this.state.set('readyBack');
-
-    this.displayed.set({
-      top: this.value,
-      bottom: this.value - 1,
-      faceFront: this.value - 1,
-      faceBack: this.value
-    });
-
-    setTimeout(() => {
-      this.state.set('runningBack');
-    });
-
-    this.value--;
+    this.setValue(this.value + -1, direction);
   }
 
   setValue(value: number, direction: 'up' | 'down' = 'down') {
@@ -162,7 +127,7 @@ export class NumberComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.max > value || this.min > value) {
+    if (this.max < value || this.min > value) {
       return;
     }
 
@@ -172,23 +137,7 @@ export class NumberComponent implements OnInit, AfterViewInit {
 
     if (direction === 'down') {
 
-      this.state.set('readyBack');
-
-      this.displayed.set({
-        top: this.value,
-        faceFront: value,
-        faceBack: this.value,
-        bottom: value
-      });
-
-      setTimeout(() => {
-        this.state.set('runningBack');
-      });
-    }
-
-    if (direction === 'up') {
-
-      this.state.set('ready');
+      this.state.set('readyDown');
 
       this.displayed.set({
         top: value,
@@ -198,7 +147,23 @@ export class NumberComponent implements OnInit, AfterViewInit {
       });
 
       setTimeout(() => {
-        this.state.set('running');
+        this.state.set('runningDown');
+      });
+    }
+
+    if (direction === 'up') {
+
+      this.state.set('readyUp');
+
+      this.displayed.set({
+        top: this.value,
+        faceFront: value,
+        faceBack: this.value,
+        bottom: value
+      });
+
+      setTimeout(() => {
+        this.state.set('runningUp');
       });
     }
 
@@ -213,22 +178,13 @@ export class NumberComponent implements OnInit, AfterViewInit {
     this.setValue(this.min, direction ? direction : this.min < this.value ? 'down' : 'up');
   }
 
-  ngAfterViewInit(): void {
-
-    const separatorColor = (this.el.nativeElement as HTMLElement).querySelector('[data-separator-color]')?.getAttribute('data-separator-color');
-
-    if (separatorColor) {
-      this.separatorColor = separatorColor;
-      this.cdr.detectChanges();
-    }
-  }
-
   protected captureDoneStateEvent(toState: string) {
-    if (toState === 'running' || toState === 'runningBack') {
+
+    if (toState === 'runningUp' || toState === 'runningDown') {
       this.state.set('steady');
     }
 
-    if (toState === 'running') {
+    if (toState === 'runningDown') {
       this.displayed.update((displayed) => {
         return {
           ...displayed,
@@ -237,7 +193,7 @@ export class NumberComponent implements OnInit, AfterViewInit {
       });
     }
 
-    if (toState === 'runningBack') {
+    if (toState === 'runningUp') {
       this.displayed.update((displayed) => {
         return {
           ...displayed,
@@ -245,10 +201,5 @@ export class NumberComponent implements OnInit, AfterViewInit {
         }
       });
     }
-
-  }
-
-  protected map(x: number, in_min: number, in_max: number, out_min: number, out_max: number) {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 }

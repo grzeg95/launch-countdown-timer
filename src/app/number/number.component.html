@@ -1,12 +1,14 @@
 <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{background: cardUp, text: padStart(displayed().top, maxLen, '0')}" />
 
+<div class="separator" [style.background-color]="separatorColor"></div>
+
 @if (state() !== 'steady') {
-  <div class="flipper active">
-    <div class="face-wrapper" [@state]="state()" (@state.done)="captureDoneStateEvent($event.toState)">
-      <div class="face front">
+  <div class="flipper">
+    <div class="flipper__face-wrapper" [@state]="state()" (@state.done)="captureDoneStateEvent($event.toState)">
+      <div class="flipper__face-wrapper__face flipper__face-wrapper__face__front">
         <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{background: cardUp, text: padStart(displayed().faceFront, maxLen, '0')}" />
       </div>
-      <div class="face back">
+      <div class="flipper__face-wrapper__face flipper__face-wrapper__face__back">
         <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{background: cardDown, text: padStart(displayed().faceBack, maxLen, '0'), down: true}" />
       </div>
     </div>
@@ -16,7 +18,7 @@
 <ng-container [ngTemplateOutlet]="card" [ngTemplateOutletContext]="{background: cardDown, text: padStart(displayed().bottom, maxLen, '0'), down: true}" />
 
 <ng-template #card let-background="background" let-down="down" let-fill="fill" let-text="text">
-  <svg [style.filter]="down ? 'brightness(1)' : 'brightness(0.8)'" class="app-card" [attr.viewBox]="'0 0 ' + (('' + text).length * 10) + ' 10.1'" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg [style.filter]="down ? 'brightness(1)' : 'brightness(0.8)'" class="card" [attr.viewBox]="'0 0 ' + (('' + text).length * 10) + ' 10'" fill="none" xmlns="http://www.w3.org/2000/svg">
 
     @if (background) {
       <ng-container [ngTemplateOutlet]="background" [ngTemplateOutletContext]="{text: ('' + text), size: 10}" />
@@ -24,11 +26,9 @@
       <rect [attr.width]="('' + text).length * 10" [attr.height]="10" rx="1" [attr.fill]="fill"/>
     }
 
-    <text [attr.x]="('' + text).length * 5" [attr.y]="down ? (map(fontSize, 0.5, 1, 3, 5)) - 0.1 : (map(fontSize, 0.5, 1, 13, 15))" text-anchor="middle" [attr.fill]="color">
+    <text [attr.x]="('' + text).length * 5" [attr.y]="down ? (map(fontSize, 0.5, 1, 3, 5)) : (map(fontSize, 0.5, 1, 13, 15))" text-anchor="middle" [attr.fill]="color">
       {{ text }}
     </text>
-
-    <rect [attr.y]="10" [attr.width]="('' + text).length * 10" [attr.height]="0.1" [attr.fill]="separatorColor"/>
 
   </svg>
 </ng-template>
