@@ -1,0 +1,97 @@
+.app-root {
+
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .info {
+
+    font-size: 1.25rem;
+    letter-spacing: 7px;
+    text-align: center;
+    margin: 20vh 6.4% 10vh;
+    max-width: 686px;
+
+    @media (min-width: 576px) {
+      font-size: 2rem;
+    }
+  }
+
+  .background {
+
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+
+    &__mask {
+      background-size: cover;
+      background-position: center;
+      height: 100%;
+    }
+
+    &__ground {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      height: 20vh;
+    }
+  }
+
+  .numbers {
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    max-width: 686px;
+    margin: 0 6.4%;
+    gap: 3vw;
+
+    &__number {
+
+      display: grid;
+      align-items: center;
+
+      &__wrapper {
+
+        position: relative;
+
+        &__background {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          top: 5%;
+          z-index: -1;
+        }
+      }
+
+      &__desc {
+        font-weight: bold;
+        text-transform: uppercase;
+        display: flex;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.text {
+  &__value {
+    text-anchor: middle;
+    alignment-baseline: central;
+
+    &__last-character {
+      letter-spacing: 0;
+    }
+  }
+}
+
+.logos {
+  margin: auto 6.4% 5vh;
+  display: flex;
+  gap: 20px;
+}
