@@ -64,24 +64,28 @@ export class NumberComponent implements OnInit {
 
   @HostBinding('style.font-size.rem') @Input() fontSize = 1;
   @HostBinding('style.font-weight') @Input() fontWeight = 500;
+
   @Input({required: true}) min!: number
   @Input({required: true}) value!: number;
   @Input() separatorColor = 'silver';
-  @Output() maxReached = new EventEmitter<void>();
-  @Output() minReached = new EventEmitter<void>();
   @Input({required: true}) cardUp!: TemplateRef<any>;
   @Input({required: true}) cardDown!: TemplateRef<any>;
   @Input() color = 'black';
+
+  @Output() maxReached = new EventEmitter<void>();
+  @Output() minReached = new EventEmitter<void>();
+
   protected state = signal<'readyUp' | 'readyDown' | 'runningUp' | 'runningDown' | 'steady'>('steady');
   protected displayed!: WritableSignal<{
     top: number,
     bottom: number,
     faceFront: number,
     faceBack: number
-  }>
+  }>;
+
   protected maxLen = 0;
 
-  _max!: number;
+  private _max!: number;
 
   get max() {
     return this._max;

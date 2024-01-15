@@ -1,89 +1,97 @@
-<div class="info text" [style.color]="theme.color" [style.font-weight]="theme.fontWeight">
-  <span class="text__value">{{ theme.text.slice(0, -1) }}</span>
-  <span class="text__value text__value__last-character">{{ theme.text[theme.text.length - 1] }}</span>
+<div class="content">
+
+  <div class="clock">
+
+    <div class="info text" [style.color]="theme.color" [style.font-weight]="theme.fontWeight">
+      <span class="text__value">{{ theme.text.slice(0, -1) }}</span>
+      <span class="text__value text__value__last-character">{{ theme.text[theme.text.length - 1] }}</span>
+    </div>
+
+    <div class="numbers">
+
+      @for (number of numbers; track number) {
+        <div class="numbers__number">
+
+          <div class="numbers__number__wrapper">
+            <app-number
+              [color]="theme.colorActive"
+              [separatorColor]="theme.cardShadow"
+              [fontSize]="theme.fontSize"
+              [fontWeight]="theme.fontWeight"
+              [cardUp]="cardUp"
+              [cardDown]="cardDown"
+              [value]="number.value"
+              [min]="number.min"
+              [max]="number.max"/>
+
+            <ng-container [ngTemplateOutlet]="background"/>
+
+          </div>
+
+          <ng-container [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{text: number.desc}"/>
+
+        </div>
+      }
+
+    </div>
+
+    <ng-template #cardUp let-text="text" let-size="size">
+
+      <svg>
+        <rect [attr.width]="text.length * size" [attr.height]="size" rx="1" [attr.fill]="theme.cardBackground"/>
+      </svg>
+
+      <svg y="9" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path [attr.fill]="theme.cardShadow" d="M5.96244e-07 0C6.56609 7.82999e-08 13.0679 1.29329 19.1342 3.80602C25.2005 6.31876 30.7124 10.0017 35.3553 14.6447C39.9983 19.2876 43.6812 24.7996 46.194 30.8658C48.7067 36.9321 50 43.4339 50 50L0 50L5.96244e-07 0Z"/>
+      </svg>
+
+      <svg y="9" [attr.x]="(size * text.length) - 1" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path [attr.fill]="theme.cardShadow" d="M0 50C5.74027e-07 43.4339 1.29329 36.9321 3.80603 30.8658C6.31877 24.7995 10.0017 19.2876 14.6447 14.6446C19.2876 10.0017 24.7996 6.31874 30.8659 3.80601C36.9321 1.29328 43.434 -6.34019e-06 50 0L50 50L0 50Z"/>
+      </svg>
+
+    </ng-template>
+
+    <ng-template #cardDown let-text="text" let-size="size">
+      <svg>
+        <rect [attr.width]="text.length * size" [attr.height]="size" rx="1" [attr.fill]="theme.cardBackground"/>
+      </svg>
+
+      <svg y="0" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path [attr.fill]="theme.cardShadow" d="M50 0C50 13.2608 44.7322 25.9785 35.3554 35.3553C25.9785 44.7321 13.2609 50 3.95377e-05 50L0 0L50 0Z"/>
+      </svg>
+
+      <svg y="0" [attr.x]="(size * text.length) - 1" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path [attr.fill]="theme.cardShadow" d="M50 50C36.7392 50 24.0215 44.7322 14.6447 35.3553C5.26785 25.9785 8.32559e-06 13.2609 0 3.13916e-05L50 0L50 50Z" fill="#D9D9D9"/>
+      </svg>
+    </ng-template>
+
+    <ng-template #text let-text="text">
+      <svg [attr.viewBox]="'0 0 130 60'" xmlns="http://www.w3.org/2000/svg" class="numbers__number__desc">
+        <text x="50%" y="50%" class="text">
+          <tspan [attr.fill]="theme.colorSecond" class="text__value">{{ text.slice(0, -1) }}</tspan>
+          <tspan [attr.fill]="theme.colorSecond" class="text__value text__value__last-character">{{ text[text.length - 1] }}
+          </tspan>
+        </text>
+      </svg>
+    </ng-template>
+
+    <ng-template #background>
+      <svg class="numbers__number__wrapper__background">
+        <rect [attr.width]="'100%'" [attr.height]="'100%'" rx="5" [attr.fill]="theme.cardShadow"/>
+      </svg>
+    </ng-template>
+
+  </div>
+
+  <div class="partners">
+    @for (partner of partners; track partner) {
+      <div #partnerRef class="partners__partner" [attr.aria-label]="partner.name + ' Logo'" [innerHTML]="partner.logo | bypassHtmlSanitizer"></div>
+    }
+  </div>
+
 </div>
 
 <div class="background">
   <div class="background__mask" [style.background-image]="'url(' + theme.backgroundMask + ')'"></div>
   <img class="background__ground" [src]="theme.backgroundGround" alt="Background ground"/>
-</div>
-
-<div class="numbers">
-
-  @for (number of numbers; track number) {
-    <div class="numbers__number">
-
-      <div class="numbers__number__wrapper">
-        <app-number
-          [color]="theme.colorActive"
-          [separatorColor]="theme.cardShadow"
-          [fontSize]="theme.fontSize"
-          [fontWeight]="theme.fontWeight"
-          [cardUp]="cardUp"
-          [cardDown]="cardDown"
-          [value]="number.value"
-          [min]="number.min"
-          [max]="number.max"/>
-
-        <ng-container [ngTemplateOutlet]="background"/>
-
-      </div>
-
-      <ng-container [ngTemplateOutlet]="text" [ngTemplateOutletContext]="{text: number.desc}"/>
-
-    </div>
-  }
-
-</div>
-
-<ng-template #cardUp let-text="text" let-size="size">
-
-  <svg>
-    <rect [attr.width]="text.length * size" [attr.height]="size" rx="1" [attr.fill]="theme.cardBackground"/>
-  </svg>
-
-  <svg y="9" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path [attr.fill]="theme.cardShadow" d="M5.96244e-07 0C6.56609 7.82999e-08 13.0679 1.29329 19.1342 3.80602C25.2005 6.31876 30.7124 10.0017 35.3553 14.6447C39.9983 19.2876 43.6812 24.7996 46.194 30.8658C48.7067 36.9321 50 43.4339 50 50L0 50L5.96244e-07 0Z"/>
-  </svg>
-
-  <svg y="9" [attr.x]="(size * text.length) - 1" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path [attr.fill]="theme.cardShadow" d="M0 50C5.74027e-07 43.4339 1.29329 36.9321 3.80603 30.8658C6.31877 24.7995 10.0017 19.2876 14.6447 14.6446C19.2876 10.0017 24.7996 6.31874 30.8659 3.80601C36.9321 1.29328 43.434 -6.34019e-06 50 0L50 50L0 50Z"/>
-  </svg>
-
-</ng-template>
-
-<ng-template #cardDown let-text="text" let-size="size">
-  <svg>
-    <rect [attr.width]="text.length * size" [attr.height]="size" rx="1" [attr.fill]="theme.cardBackground"/>
-  </svg>
-
-  <svg y="0" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path [attr.fill]="theme.cardShadow" d="M50 0C50 13.2608 44.7322 25.9785 35.3554 35.3553C25.9785 44.7321 13.2609 50 3.95377e-05 50L0 0L50 0Z"/>
-  </svg>
-
-  <svg y="0" [attr.x]="(size * text.length) - 1" width="1" height="1" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path [attr.fill]="theme.cardShadow" d="M50 50C36.7392 50 24.0215 44.7322 14.6447 35.3553C5.26785 25.9785 8.32559e-06 13.2609 0 3.13916e-05L50 0L50 50Z" fill="#D9D9D9"/>
-  </svg>
-</ng-template>
-
-<ng-template #text let-text="text">
-  <svg [attr.viewBox]="'0 0 130 60'" xmlns="http://www.w3.org/2000/svg" class="numbers__number__desc">
-    <text x="50%" y="50%" class="text">
-      <tspan [attr.fill]="theme.colorSecond" class="text__value">{{ text.slice(0, -1) }}</tspan>
-      <tspan [attr.fill]="theme.colorSecond" class="text__value text__value__last-character">{{ text[text.length - 1] }}
-      </tspan>
-    </text>
-  </svg>
-</ng-template>
-
-<ng-template #background>
-  <svg class="numbers__number__wrapper__background">
-    <rect [attr.width]="'100%'" [attr.height]="'100%'" rx="5" [attr.fill]="theme.cardShadow"/>
-  </svg>
-</ng-template>
-
-<div class="partners">
-  @for (partner of partners; track partner) {
-    <div #partnerRef class="partners__partner" [attr.aria-label]="partner.name + ' Logo'" [innerHTML]="partner.logo | bypassHtmlSanitizer"></div>
-  }
 </div>
