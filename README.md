@@ -38,7 +38,6 @@ Users should be able to:
 
 - [Angular 17](https://angular.dev/)
 - CSS Flexbox
-- CSS Grid
 - CSS BEM
 - Mobile-first workflow
 
