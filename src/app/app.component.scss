@@ -69,11 +69,8 @@
       &__desc {
         font-weight: bold;
         text-transform: uppercase;
-        display: flex;
-      }
-
-      &:last-child {
-        margin-right: 0;
+        letter-spacing: 7px;
+        font-size: 0.75rem;
       }
     }
   }

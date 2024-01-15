@@ -68,7 +68,7 @@
 
 <ng-template #text let-text="text">
   <svg [attr.viewBox]="'0 0 130 60'" xmlns="http://www.w3.org/2000/svg" class="numbers__number__desc">
-    <text x="50%" y="50%" class="numbers__number__desc__value text">
+    <text x="50%" y="50%" class="text">
       <tspan [attr.fill]="theme.colorSecond" class="text__value">{{ text.slice(0, -1) }}</tspan>
       <tspan [attr.fill]="theme.colorSecond" class="text__value text__value__last-character">{{ text[text.length - 1] }}
       </tspan>
