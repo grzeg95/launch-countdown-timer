@@ -1,20 +1,82 @@
 .app-root {
 
-  height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
 
-  .info {
+  .content {
 
-    font-size: 1.25rem;
-    letter-spacing: 7px;
-    text-align: center;
-    margin: 20vh 6.4% 10vh;
+    display: flex;
+    margin: 0 6.4%;
     max-width: 686px;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
 
-    @media (min-width: 576px) {
-      font-size: 2rem;
+    .clock {
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .info {
+
+        font-size: 1.25rem;
+        letter-spacing: 4px;
+        margin-bottom: 5vh;
+        text-align: center;
+
+        @media (min-width: 576px) {
+          font-size: 2rem;
+        }
+      }
+
+      .numbers {
+
+        display: flex;
+        gap: 3vw;
+
+        &__number {
+
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &__wrapper {
+
+            position: relative;
+
+            &__background {
+              position: absolute;
+              height: 100%;
+              width: 100%;
+              top: 5%;
+              z-index: -1;
+            }
+          }
+
+          &__desc {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+
+    .partners {
+
+      display: flex;
+      gap: 20px;
+      position: absolute;
+      bottom: 0;
+      height: 20vh;
+      align-items: center;
+
+      &__partner {
+        cursor: pointer;
+        line-height: 0;
+      }
     }
   }
 
@@ -23,10 +85,11 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: -1;
+    bottom: 0;
+    z-index: -2;
 
     &__mask {
-      background-size: cover;
+      background-size: contain;
       background-position: center;
       height: 100%;
     }
@@ -37,63 +100,5 @@
       bottom: 0;
       height: 20vh;
     }
-  }
-
-  .numbers {
-
-    display: flex;
-    align-items: center;
-    max-width: 686px;
-    margin: 0 6.4%;
-    gap: 3vw;
-
-    &__number {
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      &__wrapper {
-
-        position: relative;
-
-        &__background {
-          position: absolute;
-          height: 100%;
-          width: 100%;
-          top: 5%;
-          z-index: -1;
-        }
-      }
-
-      &__desc {
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 7px;
-        font-size: 0.75rem;
-      }
-    }
-  }
-}
-
-.text {
-  &__value {
-    text-anchor: middle;
-    alignment-baseline: central;
-
-    &__last-character {
-      letter-spacing: 0;
-    }
-  }
-}
-
-.partners {
-  margin: auto 6.4% 5vh;
-  display: flex;
-  gap: 20px;
-  cursor: pointer;
-
-  &__partner {
-    line-height: 0;
   }
 }

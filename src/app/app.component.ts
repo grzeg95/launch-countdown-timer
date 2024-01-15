@@ -2,11 +2,11 @@ import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  Component, ElementRef,
+  Component,
+  ElementRef,
   Inject,
-  NO_ERRORS_SCHEMA,
   QueryList,
-  Renderer2, ViewChild,
+  Renderer2,
   ViewChildren,
   ViewEncapsulation
 } from '@angular/core';
@@ -24,10 +24,7 @@ import {BypassHtmlSanitizerPipe} from './pipes/bypass-html-sanitizer.pipe';
   encapsulation: ViewEncapsulation.None,
   host: {
     class: 'app-root'
-  },
-  schemas: [
-    NO_ERRORS_SCHEMA
-  ]
+  }
 })
 export class AppComponent implements AfterViewInit {
 
@@ -127,14 +124,15 @@ export class AppComponent implements AfterViewInit {
         }
       }
 
-      const decrementator = interval(1000).subscribe(() => {
-        this.numberComponents.get(this.numberComponents.length - 1)?.decrement();
-      })
-
-      this.subs.push(decrementator);
+      this.subs.push(
+        interval(1000).subscribe(() => {
+          this.numberComponents.get(this.numberComponents.length - 1)?.decrement();
+        })
+      );
     }
 
     if (this.partnersRefs?.length) {
+
       for (const partnerRef of this.partnersRefs) {
 
         const paths = partnerRef.nativeElement.querySelectorAll('path');
@@ -144,6 +142,7 @@ export class AppComponent implements AfterViewInit {
             this.renderer.setAttribute(path, 'fill', this.theme.partnerLogoHover);
           });
         });
+
         partnerRef.nativeElement.addEventListener('mouseleave', () => {
           paths.forEach((path) => {
             this.renderer.setAttribute(path, 'fill', this.theme.partnerLogo);
