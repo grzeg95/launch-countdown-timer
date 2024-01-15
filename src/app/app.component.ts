@@ -83,7 +83,7 @@ export class AppComponent implements AfterViewInit {
 
   reload() {
 
-    for (let sub of this.subs) {
+    for (const sub of this.subs) {
       sub.unsubscribe();
     }
     this.subs = [];
@@ -92,7 +92,7 @@ export class AppComponent implements AfterViewInit {
 
     if (this.numberComponents?.length) {
 
-      for (let [i, numberComponent] of this.numberComponents.toArray().entries()) {
+      for (const [i, numberComponent] of this.numberComponents.toArray().entries()) {
 
         if (i == 0) {
           this.subs.push(
