@@ -82,9 +82,8 @@
   </svg>
 </ng-template>
 
-
-<div class="logos">
-  <img src="/assets/images/icon-facebook.svg" alt="Logo Facebook" />
-  <img src="/assets/images/icon-pinterest.svg" alt="Logo Pinterest" />
-  <img src="/assets/images/icon-instagram.svg" alt="Logo Instagram"/>
+<div class="partners">
+  @for (partner of partners; track partner) {
+    <div #partnerRef class="partners__partner" [attr.aria-label]="partner.name + ' Logo'" [innerHTML]="partner.logo | bypassHtmlSanitizer"></div>
+  }
 </div>

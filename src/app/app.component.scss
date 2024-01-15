@@ -90,8 +90,13 @@
   }
 }
 
-.logos {
+.partners {
   margin: auto 6.4% 5vh;
   display: flex;
   gap: 20px;
+  cursor: pointer;
+
+  &__partner {
+    line-height: 0;
+  }
 }
